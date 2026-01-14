@@ -26,3 +26,6 @@ tsconfig.tsbuildinfo
 # Misc
 *.log
 .DS_Store
+
+# Session memory (local per developer)
+MEMORY.md
