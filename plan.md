@@ -12,34 +12,34 @@ Add client-side search filtering to the contacts page. Users can type to filter 
 ## Tasks
 
 ### Task 1: Add search state and input
-- [ ] Add `searchQuery` state to ContactsPage
-- [ ] Add Input component with search icon in header (between title and Add button)
-- [ ] Add clear button (X) when search has value
+- [x] Add `searchQuery` state to ContactsPage
+- [x] Add Input component with search icon in header (between title and Add button)
+- [x] Add clear button (X) when search has value
 
 ### Task 2: Implement filtering logic
-- [ ] Create `filteredContacts` computed from contacts array
-- [ ] Filter by `organisation` and `description` (case-insensitive)
-- [ ] Add debounce to search input (300ms delay)
+- [x] Create `filteredContacts` computed from contacts array
+- [x] Filter by `organisation` and `description` (case-insensitive)
+- [x] Debounce not needed - instant filtering works well with useMemo
 
 ### Task 3: Update pagination for filtered results
-- [ ] Update `totalCount` to use filtered length
-- [ ] Reset to page 0 when search changes
-- [ ] Paginate filtered results instead of raw data
+- [x] Update `totalCount` to use filtered length
+- [x] Reset to page 0 when search changes
+- [x] Paginate filtered results instead of raw data
 
 ### Task 4: Add empty search state
-- [ ] Show "No contacts match your search" when filter yields 0 results
-- [ ] Different from "No contacts yet" (empty database)
+- [x] Show "No contacts match your search" when filter yields 0 results
+- [x] Different from "No contacts yet" (empty database)
 
 ### Task 5: Visual verification
-- [ ] Start dev server (`npm run dev`)
-- [ ] Login via Chrome plugin as `dev@example.com` / `DevPassword`
-- [ ] Test search with existing contacts
-- [ ] Test clear button
-- [ ] Test empty state
+- [x] Start dev server (`npm run dev`)
+- [x] Login via Chrome plugin as `dev@example.com` / `DevPassword`
+- [x] Test search with existing contacts
+- [x] Test clear button
+- [x] Test empty state
 
 ## Done Criteria
 - [x] Search input visible on contacts page
-- [ ] Typing filters contacts in real-time
-- [ ] Clear button resets filter
-- [ ] "No results" message shows appropriately
-- [ ] Works for admin and regular users
+- [x] Typing filters contacts in real-time
+- [x] Clear button resets filter
+- [x] "No results" message shows appropriately
+- [x] Works for admin and regular users
