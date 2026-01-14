@@ -5,25 +5,14 @@ See [exercises.md](exercises.md) for workshop workflow.
 
 ## Session Memory
 
+**Skill:** `session-memory` (see `.claude/skills/session-memory/SKILL.md`)
+
 **File:** `MEMORY.md` - Cross-session knowledge base
 
-**On session start:**
-1. Read `MEMORY.md` for context from previous sessions
-2. Check "Current Context" for where we left off
-
-**During work:**
-- Append discoveries to "Codebase Insights"
-- Record decisions in "Technical Decisions"
-- Note blockers in "Blocked / TODO"
-
-**On session end:**
-- Update "Current Context" with status
-- Add learnings to "Learnings" section
-
 **Commands:**
-- `clear memory` → Reset `MEMORY.md` from `MEMORY.template.md` (erases all accumulated knowledge)
+- `/clear-memory` → Reset MEMORY.md to empty template
 
-**Important:** Never clear memory automatically. Only clear when user explicitly says "clear memory".
+See skill for full details on when to read, update, and clear.
 
 ## Agile SDLC Workflow
 
