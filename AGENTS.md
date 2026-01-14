@@ -20,7 +20,10 @@ See [exercises.md](exercises.md) for workshop workflow.
 - Update "Current Context" with status
 - Add learnings to "Learnings" section
 
-**To reset:** User command "clear memory" → delete content between section headers in `MEMORY.md`
+**Commands:**
+- `clear memory` → Reset `MEMORY.md` from `MEMORY.template.md` (erases all accumulated knowledge)
+
+**Important:** Never clear memory automatically. Only clear when user explicitly says "clear memory".
 
 ## Agile SDLC Workflow
 
