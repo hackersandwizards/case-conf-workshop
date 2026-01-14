@@ -13,16 +13,23 @@ See [exercises.md](exercises.md) for workshop workflow.
 - Create `plan.md` with tasks
 - Define done criteria
 
-### 3. Code
+### 3. Visual Review
+- Start dev server (`npm run dev`)
+- Use Chrome plugin to explore current UI state
+- Login with test credentials (see Verify section)
+- Screenshot/understand the area being modified
+- Identify existing patterns and component placement
+
+### 4. Code
 - Follow pattern files below
 - Small commits, one feature at a time
 
-### 4. Test
+### 5. Test
 - `npm run build` - type check
 - `npm run lint` - code quality
 - `npm run dev` - manual verification
 
-### 5. Verify
+### 6. Verify
 - Test feature end-to-end in browser using Chrome plugin
 - `npx prisma migrate dev` if schema changed
 
@@ -34,7 +41,7 @@ See [exercises.md](exercises.md) for workshop workflow.
 3. Verify the feature works visually
 4. Test edge cases (empty states, errors, etc.)
 
-### 6. Reflect
+### 7. Reflect
 - What worked? What didn't?
 - Update this file with learnings
 - New session → next feature
