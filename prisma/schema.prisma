@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 model User {
@@ -23,7 +23,7 @@ model User {
 
 model Contact {
   id           String   @id @default(uuid())
-  organisation String   @db.VarChar(255)
+  organisation String
   description  String?
   ownerId      String   @map("owner_id")
   owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)

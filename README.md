@@ -6,13 +6,12 @@ A full-stack contact relationship management application built with Next.js 16, 
 
 - **Frontend**: Next.js 16 (App Router), React 19, Chakra UI 3, TanStack Query
 - **Backend**: Next.js API Routes
-- **Database**: PostgreSQL 18, Prisma 7 ORM
+- **Database**: SQLite, Prisma 7 ORM
 - **Authentication**: JWT tokens with bcrypt password hashing
 
 ## Prerequisites
 
 - Node.js 20+
-- Docker & Docker Compose
 
 ## Quick Start
 
@@ -22,27 +21,19 @@ A full-stack contact relationship management application built with Next.js 16, 
 npm install
 ```
 
-### 2. Start the Database
-
-```bash
-npm run db:start
-```
-
-This starts a PostgreSQL container via Docker Compose.
-
-### 3. Run Migrations
+### 2. Run Migrations
 
 ```bash
 npm run db:migrate
 ```
 
-### 4. Generate Prisma Client
+### 3. Generate Prisma Client
 
 ```bash
 npx prisma generate
 ```
 
-### 5. Seed the Database
+### 4. Seed the Database
 
 ```bash
 npm run db:seed
@@ -53,7 +44,7 @@ This creates test users and sample data:
 - **User**: `alice@example.com` / `AlicePassword123`
 - **User**: `bob@example.com` / `BobPassword123`
 
-### 6. Start Development Server
+### 5. Start Development Server
 
 ```bash
 npm run dev
@@ -65,12 +56,10 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 | Script | Description |
 |--------|-------------|
-| `npm run dev` | Start development server (also starts DB) |
+| `npm run dev` | Start development server |
 | `npm run build` | Build for production |
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
-| `npm run db:start` | Start PostgreSQL container |
-| `npm run db:stop` | Stop PostgreSQL container |
 | `npm run db:migrate` | Run database migrations |
 | `npm run db:seed` | Seed database with test data |
 | `npm run db:reset` | Reset database (drop and recreate) |
@@ -97,11 +86,10 @@ The application will be available at [http://localhost:3000](http://localhost:30
 │   ├── auth.ts           # JWT & password utilities
 │   ├── api-utils.ts      # API response helpers
 │   └── client/           # Frontend API client & hooks
-├── prisma/
-│   ├── schema.prisma     # Database schema
-│   ├── seed.ts           # Seed script
-│   └── migrations/       # Database migrations
-└── docker-compose.yml    # PostgreSQL container
+└── prisma/
+    ├── schema.prisma     # Database schema
+    ├── seed.ts           # Seed script
+    └── migrations/       # Database migrations
 ```
 
 ## Features
@@ -157,7 +145,7 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 ```env
 # Database
-DATABASE_URL="postgresql://postgres:DevDatabasePassword@localhost:5432/app"
+DATABASE_URL="file:./prisma/dev.db"
 
 # Auth
 JWT_SECRET="your-secret-key"
@@ -170,7 +158,8 @@ FIRST_SUPERUSER_PASSWORD="DevPassword"
 
 ## Development Notes
 
-- The app uses Prisma 7 with the `@prisma/adapter-pg` driver adapter
+- The app uses Prisma 7 with the `@prisma/adapter-better-sqlite3` driver adapter
+- SQLite database is stored in `prisma/dev.db`
 - Chakra UI 3 is used for the UI component library
 - TanStack Query handles server state management
 - React Hook Form handles form state and validation
