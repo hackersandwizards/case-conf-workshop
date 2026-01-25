@@ -1,147 +1,211 @@
-# CRM - Contact Management Application
+# CRM Training Application (Next.js + React)
 
-A full-stack contact relationship management application built with Next.js 16, Prisma 7, and Chakra UI.
+A training CRM application built with Next.js 16, Prisma 7, and React with Chakra UI.
 
 ## Tech Stack
 
-- **Frontend**: Next.js 16 (App Router), React 19, Chakra UI 3, TanStack Query
+- **Frontend**: Next.js 16 (App Router), React 19, Chakra UI 3
 - **Backend**: Next.js API Routes
-- **Database**: SQLite, Prisma 7 ORM
+- **Database**: SQLite with Prisma 7 ORM
 - **Authentication**: JWT tokens with bcrypt password hashing
+- **State Management**: TanStack Query
 
-## Prerequisites
+## Features
 
-- Node.js 20+
+- User authentication (login/signup)
+- Contact management (CRUD)
+- User administration (superuser only)
+- Profile settings
+- REST API for external clients
 
 ## Quick Start
 
-### 1. Install Dependencies
+Requirements:
+- Node.js 20+
 
 ```bash
+# Install dependencies
 npm install
-```
 
-### 2. Run Migrations
+# Run migrations and generate Prisma client
+npm run db:migrate && npx prisma generate
 
-```bash
-npm run db:migrate
-```
-
-### 3. Generate Prisma Client
-
-```bash
-npx prisma generate
-```
-
-### 4. Seed the Database
-
-```bash
+# Seed database with test data
 npm run db:seed
-```
 
-This creates test users and sample data:
-- **Admin**: `dev@example.com` / `DevPassword`
-- **User**: `alice@example.com` / `AlicePassword123`
-- **User**: `bob@example.com` / `BobPassword123`
-
-### 5. Start Development Server
-
-```bash
+# Start development server
 npm run dev
 ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000)
+Open http://localhost:3000
 
-## Available Scripts
+## Default Users
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
-| `npm run db:migrate` | Run database migrations |
-| `npm run db:seed` | Seed database with test data |
-| `npm run db:reset` | Reset database (drop and recreate) |
+| Email | Password | Role |
+|-------|----------|------|
+| dev@example.com | DevPassword | Superuser |
+| alice@example.com | AlicePassword123 | User |
+| bob@example.com | BobPassword123 | User |
 
 ## Project Structure
 
 ```
-├── app/
-│   ├── (auth)/           # Public auth pages (login, signup)
-│   ├── (dashboard)/      # Protected pages (contacts, admin, settings)
-│   ├── api/v1/           # API routes
-│   │   ├── login/        # Authentication endpoints
-│   │   ├── users/        # User management endpoints
-│   │   └── contacts/     # Contact CRUD endpoints
-│   ├── layout.tsx        # Root layout
-│   └── providers.tsx     # Client providers (Chakra, React Query)
-├── components/
-│   ├── layout/           # Sidebar, Navbar
-│   ├── contacts/         # Contact CRUD dialogs
-│   ├── admin/            # User management dialogs
-│   └── settings/         # Settings components
-├── lib/
-│   ├── db.ts             # Prisma client singleton
-│   ├── auth.ts           # JWT & password utilities
-│   ├── api-utils.ts      # API response helpers
-│   └── client/           # Frontend API client & hooks
-└── prisma/
-    ├── schema.prisma     # Database schema
-    ├── seed.ts           # Seed script
-    └── migrations/       # Database migrations
+app/
+├── (auth)/               # Public auth pages (login, signup)
+├── (dashboard)/          # Protected pages (contacts, admin, settings)
+├── api/v1/               # REST API routes
+│   ├── login/            # Authentication endpoints
+│   ├── users/            # User management endpoints
+│   └── contacts/         # Contact CRUD endpoints
+├── layout.tsx            # Root layout
+└── providers.tsx         # Client providers (Chakra, React Query)
+components/
+├── layout/               # Sidebar, Navbar
+├── contacts/             # Contact CRUD dialogs
+├── admin/                # User management dialogs
+└── settings/             # Settings components
+lib/
+├── db.ts                 # Prisma client singleton
+├── auth.ts               # JWT & password utilities
+├── api-utils.ts          # API response helpers
+└── client/               # Frontend API client & hooks
+prisma/
+├── schema.prisma         # Database schema
+├── seed.ts               # Seed script
+└── migrations/           # Database migrations
 ```
 
-## Features
+## REST API
+
+Base URL: `/api/v1`
 
 ### Authentication
-- JWT-based authentication
-- Login/Signup pages
-- Protected routes
-- Token stored in localStorage
 
-### User Management (Admin)
-- Create, edit, delete users
-- Assign superuser role
-- Activate/deactivate users
+```bash
+# Login (get bearer token)
+POST /api/v1/login/access-token
+Content-Type: application/json
+{
+  "username": "dev@example.com",
+  "password": "DevPassword"
+}
 
-### Contact Management
-- Create, edit, delete contacts
-- Pagination
-- Superusers see all contacts
-- Regular users see only their own
+# Response
+{
+  "access_token": "...",
+  "token_type": "Bearer"
+}
 
-### Settings
-- Update profile (email, name)
-- Change password
-- Delete account (non-admins only)
-
-## API Endpoints
-
-### Authentication
-- `POST /api/v1/login/access-token` - Login
-- `POST /api/v1/login/test-token` - Verify token
+# Test token validity
+POST /api/v1/login/test-token
+Authorization: Bearer <token>
+```
 
 ### Users
-- `GET /api/v1/users` - List users (admin only)
-- `POST /api/v1/users` - Create user (admin only)
-- `GET /api/v1/users/me` - Get current user
-- `PATCH /api/v1/users/me` - Update current user
-- `PATCH /api/v1/users/me/password` - Change password
-- `DELETE /api/v1/users/me` - Delete account
-- `POST /api/v1/users/signup` - Register new user
-- `GET /api/v1/users/:id` - Get user by ID
-- `PATCH /api/v1/users/:id` - Update user (admin only)
-- `DELETE /api/v1/users/:id` - Delete user (admin only)
+
+```bash
+# Get current user
+GET /api/v1/users/me
+Authorization: Bearer <token>
+
+# Update profile
+PATCH /api/v1/users/me
+Authorization: Bearer <token>
+{
+  "email": "new@example.com",
+  "full_name": "New Name"
+}
+
+# Change password
+PATCH /api/v1/users/me/password
+Authorization: Bearer <token>
+{
+  "current_password": "...",
+  "new_password": "..."
+}
+
+# Signup (public)
+POST /api/v1/users/signup
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "full_name": "User Name"
+}
+
+# Admin: List users
+GET /api/v1/users
+Authorization: Bearer <token>  # requires superuser
+
+# Admin: Create user
+POST /api/v1/users
+Authorization: Bearer <token>  # requires superuser
+
+# Admin: Update user
+PATCH /api/v1/users/{id}
+Authorization: Bearer <token>  # requires superuser
+
+# Admin: Delete user
+DELETE /api/v1/users/{id}
+Authorization: Bearer <token>  # requires superuser
+```
 
 ### Contacts
-- `GET /api/v1/contacts` - List contacts
-- `POST /api/v1/contacts` - Create contact
-- `GET /api/v1/contacts/:id` - Get contact
-- `PUT /api/v1/contacts/:id` - Update contact
-- `DELETE /api/v1/contacts/:id` - Delete contact
+
+```bash
+# List contacts
+GET /api/v1/contacts
+Authorization: Bearer <token>
+
+# Create contact
+POST /api/v1/contacts
+Authorization: Bearer <token>
+{
+  "organisation": "Company Name",
+  "description": "Optional description"
+}
+
+# Get contact
+GET /api/v1/contacts/{id}
+Authorization: Bearer <token>
+
+# Update contact
+PUT /api/v1/contacts/{id}
+Authorization: Bearer <token>
+
+# Delete contact
+DELETE /api/v1/contacts/{id}
+Authorization: Bearer <token>
+```
+
+### Health Check
+
+```bash
+GET /api/v1/health-check
+# Response: { "message": "OK" }
+```
+
+## Development Commands
+
+```bash
+# Run migrations
+npm run db:migrate
+
+# Seed database
+npm run db:seed
+
+# Reset database
+npm run db:reset
+
+# Build for production
+npm run build
+
+# Run linter
+npm run lint
+```
 
 ## Environment Variables
+
+Key variables in `.env`:
 
 ```env
 # Database
@@ -151,15 +215,11 @@ DATABASE_URL="file:./prisma/dev.db"
 JWT_SECRET="your-secret-key"
 JWT_EXPIRES_IN="8d"
 
-# Seed (optional)
-FIRST_SUPERUSER_EMAIL="dev@example.com"
-FIRST_SUPERUSER_PASSWORD="DevPassword"
+# First superuser (optional, used by seeder)
+FIRST_SUPERUSER_EMAIL=dev@example.com
+FIRST_SUPERUSER_PASSWORD=DevPassword
 ```
 
-## Development Notes
+## License
 
-- The app uses Prisma 7 with the `@prisma/adapter-better-sqlite3` driver adapter
-- SQLite database is stored in `prisma/dev.db`
-- Chakra UI 3 is used for the UI component library
-- TanStack Query handles server state management
-- React Hook Form handles form state and validation
+This project is for training purposes.
