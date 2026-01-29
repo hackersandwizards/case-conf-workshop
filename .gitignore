@@ -27,6 +27,9 @@ tsconfig.tsbuildinfo
 *.log
 .DS_Store
 
+# Test coverage
+coverage
+
 # SQLite
 *.db
 *.db-journal
