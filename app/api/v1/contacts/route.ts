@@ -10,12 +10,24 @@ export async function GET(request: NextRequest) {
       return result.error;
     }
 
-    const { skip, limit } = parseQueryParams(request);
+    const { skip, limit, search } = parseQueryParams(request);
+    const trimmedSearch = search.trim();
 
     // Superusers see all contacts, regular users see only their own
-    const whereClause = result.user.isSuperuser
+    const ownerFilter = result.user.isSuperuser
       ? {}
       : { ownerId: result.user.id };
+
+    // Add search filter if provided (SQLite's LIKE is case-insensitive by default)
+    const whereClause = trimmedSearch
+      ? {
+          ...ownerFilter,
+          OR: [
+            { organisation: { contains: trimmedSearch } },
+            { description: { contains: trimmedSearch } },
+          ],
+        }
+      : ownerFilter;
 
     const [contacts, count] = await Promise.all([
       prisma.contact.findMany({

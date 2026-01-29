@@ -5,6 +5,7 @@ import {
   Button,
   Flex,
   Heading,
+  Input,
   Menu,
   Portal,
   Skeleton,
@@ -18,22 +19,43 @@ import { ContactsApi, type Contact } from "@/lib/client/api";
 import { AddContactDialog } from "@/components/contacts/AddContactDialog";
 import { EditContactDialog } from "@/components/contacts/EditContactDialog";
 import { DeleteContactDialog } from "@/components/contacts/DeleteContactDialog";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useDeferredLoading } from "@/hooks/useDeferredLoading";
 
 const PAGE_SIZE = 5;
+const DEBOUNCE_DELAY = 300;
+const LOADING_DELAY = 200;
 
 export default function ContactsPage() {
   const [page, setPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
   const [editContact, setEditContact] = useState<Contact | null>(null);
   const [deleteContact, setDeleteContact] = useState<Contact | null>(null);
 
+  const debouncedSearch = useDebounce(searchTerm, DEBOUNCE_DELAY);
+
   const { data, isLoading } = useQuery({
-    queryKey: ["contacts", page],
-    queryFn: () => ContactsApi.list(page * PAGE_SIZE, PAGE_SIZE),
+    queryKey: ["contacts", page, debouncedSearch],
+    queryFn: () => ContactsApi.list(page * PAGE_SIZE, PAGE_SIZE, debouncedSearch),
   });
+
+  const showLoading = useDeferredLoading(isLoading, LOADING_DELAY);
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setPage(0);
+  };
 
   const contacts = data?.data || [];
   const totalCount = data?.count || 0;
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+
+  const getEmptyMessage = () => {
+    if (debouncedSearch) {
+      return `No contacts found matching "${debouncedSearch}"`;
+    }
+    return "No contacts yet. Add your first contact!";
+  };
 
   return (
     <Box>
@@ -42,6 +64,13 @@ export default function ContactsPage() {
           <Heading size="xl">Contacts</Heading>
           <AddContactDialog />
         </Flex>
+
+        <Input
+          placeholder="Search contacts by organisation or description..."
+          value={searchTerm}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          maxW="400px"
+        />
 
         <Box bg="white" borderRadius="lg" boxShadow="sm" overflow="hidden">
           <Table.Root>
@@ -53,7 +82,7 @@ export default function ContactsPage() {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {isLoading ? (
+              {showLoading ? (
                 Array.from({ length: PAGE_SIZE }).map((_, i) => (
                   <Table.Row key={i}>
                     <Table.Cell>
@@ -71,7 +100,7 @@ export default function ContactsPage() {
                 <Table.Row>
                   <Table.Cell colSpan={3}>
                     <Text textAlign="center" color="gray.500" py={4}>
-                      No contacts yet. Add your first contact!
+                      {getEmptyMessage()}
                     </Text>
                   </Table.Cell>
                 </Table.Row>

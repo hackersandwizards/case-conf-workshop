@@ -186,8 +186,17 @@ export const UsersApi = {
 
 // Contacts API
 export const ContactsApi = {
-  async list(skip = 0, limit = 100): Promise<PaginatedResponse<Contact>> {
-    const response = await fetch(`${API_BASE}/contacts?skip=${skip}&limit=${limit}`, {
+  async list(skip = 0, limit = 100, search = ""): Promise<PaginatedResponse<Contact>> {
+    const params = new URLSearchParams({
+      skip: skip.toString(),
+      limit: limit.toString(),
+    });
+
+    if (search.trim()) {
+      params.set("search", search.trim());
+    }
+
+    const response = await fetch(`${API_BASE}/contacts?${params}`, {
       headers: getAuthHeaders(),
     });
     return handleResponse<PaginatedResponse<Contact>>(response);
