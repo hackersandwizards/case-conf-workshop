@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "idea": {
+      "url": "http://127.0.0.1:64342/sse",
+      "type": "sse"
+    },
+    "crm": {
+      "command": "npx",
+      "args": ["tsx", "mcp-server/index.ts"],
+      "type": "stdio"
+    }
+  }
+}
